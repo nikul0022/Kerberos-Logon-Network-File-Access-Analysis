@@ -11,11 +11,17 @@ Set up a functioning Active Directory domain and capture, packet-by-packet, the 
 |---|---|---|---|
 | Domain Controller | AD DS + DNS + KDC | 172.16.0.121 | crypto.com |
 | File Server | Shared folder host (`Files_Nikul`) | 172.16.0.122 | crypto.com |
-| Client | Initiates logon + file access | 172.16.0.123 | crypto.com |
+| Client | Initiates logon + file access | 172.16.0.123 | crypto.com |  
+
+<img width="936" height="745" alt="image" src="https://github.com/user-attachments/assets/4a2bf60b-5459-4841-a78f-f16388d531d1" />
+<img width="995" height="600" alt="image" src="https://github.com/user-attachments/assets/259ab845-09f1-44c9-831d-915ce7f1f69b" />
 
 - 3x Windows Server 2019 VMs, domain name `crypto.com`
 - Two domain user accounts (`testuser1` on the file server, `testuser2` on the client) created in a dedicated `LabUsers` OU
 - File server shares a folder (`Files_Nikul`) with Read/Write granted to `testuser2`
+
+<img width="937" height="575" alt="image" src="https://github.com/user-attachments/assets/321ab803-61c0-4911-ae0e-6546943b7bb6" />
+
 - Client's DNS points to the DC (172.16.0.121) so Kerberos SPN resolution and domain lookups work correctly
 - Wireshark installed on all three VMs to capture traffic at each hop
 
@@ -23,17 +29,25 @@ Set up a functioning Active Directory domain and capture, packet-by-packet, the 
 
 Filtered Wireshark on the DC for `kerberos` and captured all four stages of authentication when `testuser2` logged into the domain from the client:
 
+<img width="990" height="556" alt="image" src="https://github.com/user-attachments/assets/5d236c28-32b8-4b10-9156-8bd80e9e112c" />
+
 **1. AS-REQ (Authentication Service Request)** — client → DC
 Client sends its username (`testuser2`) and a list of supported encryption types (AES256-CTS-HMAC-SHA1-96, RC4-HMAC, DES-CBC-CRC) to request a Ticket Granting Ticket (TGT). Includes a nonce to prevent replay attacks.
 
 **2. AS-REP (Authentication Service Reply)** — DC → client
 DC returns the TGT plus an encrypted session key. The ticket and session key are wrapped in `enc-part`, encrypted with AES256-CTS-HMAC-SHA1-96 — the cipher text is unreadable without the key.
 
+<img width="990" height="556" alt="image" src="https://github.com/user-attachments/assets/4191187a-4fca-4448-a321-217f065a9e32" />
+
 **3. TGS-REQ (Ticket Granting Service Request)** — client → DC
 Using the TGT obtained above, the client requests a service ticket for the file server, authenticating itself via an AP-REQ built from the session key — no plaintext credentials are sent.
 
+<img width="877" height="626" alt="image" src="https://github.com/user-attachments/assets/d034c880-9adf-4d12-99be-b5c42e08b4f8" />
+
 **4. TGS-REP (Ticket Granting Service Reply)** — DC → client
 DC issues an encrypted service ticket scoped to the file server (`testuser2ws.crypto.com`), again wrapped in AES256-encrypted `enc-part`.
+
+<img width="876" height="623" alt="image" src="https://github.com/user-attachments/assets/0d09c919-d3d8-40ca-8262-dfd8ec675fc0" />
 
 ### What's encrypted vs. plaintext in the Kerberos exchange
 
