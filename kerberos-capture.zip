@@ -1,3 +1,1 @@
-## Packet Capture
 
-The full Wireshark capture used for this analysis is available in this repo: [`kerberos-capture.pcapng`](./kerberos-capture.pcapng) — open it in Wireshark and filter on `kerberos` or `smb` to follow the exact exchange described above.
