@@ -81,6 +81,6 @@ This confirms that while the Kerberos authentication layer is encrypted, the SMB
 Windows Server 2019 (Active Directory Domain Services, DNS), Wireshark
 
 ## Packet Capture
-The full Wireshark capture used for this analysis is available in this repo: [`kerberos-capture.zip`](./kerberos-capture.zip) — open it in Wireshark and filter on `kerberos` or `smb` to follow the exact exchange described above.
+The full Wireshark capture used for this analysis is available in this repo: [`Kerberos.zip`](./Kerberos.zip) & [`WS-kbrs.zip`](./WS-kbrs.zip) — open it in Wireshark and filter on `kerberos` or `smb` to follow the exact exchange described above.
 
 *Full report with annotated packet captures available on request.*
