@@ -66,6 +66,8 @@ This confirms Kerberos's core property: identity claims travel in the open, but 
 
 Filtered for `smb || tcp.port == 445` and accessed the shared folder `\\172.16.0.122\Files_Nikul` from the client, then downloaded a 1KB test file.
 
+<img width="880" height="536" alt="image" src="https://github.com/user-attachments/assets/303dab7b-7d9d-44f4-b661-d017ddf78753" />
+
 Captured sequence:
 1. **TCP handshake** (SYN/SYN-ACK/ACK) between client and file server
 2. **Negotiate Protocol** — client and server agree on SMB2 dialect/capabilities
@@ -79,6 +81,8 @@ Captured sequence:
 ### Proof the file payload is unencrypted
 
 The **Read Response** packet contains the literal file contents in the SMB2 data payload. Decoding the hex bytes directly reveals the plaintext:
+
+<img width="878" height="496" alt="image" src="https://github.com/user-attachments/assets/0bc3213c-2b05-42db-b7c4-45c1b6729c2f" />
 
 > `This is the new test file that we are going to transfer`
 
